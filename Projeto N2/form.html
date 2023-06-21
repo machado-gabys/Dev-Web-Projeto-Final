@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Impressão de Informações do GitHub</title>
+  <link rel="stylesheet" href="style-form.css">
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script>
+    async function getUser(number) {
+      try {
+        const response = await axios.get(`https://api.github.com/users/${number}`);
+        return response.data;
+      } catch (error) {
+        console.error(error);
+        return null;
+      }
+    }
+
+    async function imprimirInformacoes() {
+      var numero = document.getElementById('numero').value;
+
+      // Chama a função para obter as informações do usuário
+      var user = await getUser(numero);
+
+      if (user) {
+        // Exibe as informações do usuário
+        document.getElementById('nome').innerHTML = `Nome: ${user.name || 'N/A'}`;
+        document.getElementById('bio').innerHTML = `Bio: ${user.bio || 'N/A'}`;
+        document.getElementById('seguidores').innerHTML = `Seguidores: ${user.followers || 0}`;
+
+        // Verifica se a URL da foto existe antes de atribuí-la à imagem
+        if (user.avatar_url) {
+          document.getElementById('foto').src = user.avatar_url;
+          document.getElementById('foto').alt = ''; // Atribui o atributo alt vazio
+        } else {
+          document.getElementById('foto').src = 'semfoto.png';
+          document.getElementById('foto').alt = 'Sem foto'; // Atribui um texto alternativo se a imagem não estiver disponível
+        }
+      } else {
+        document.getElementById('nome').innerHTML = 'Usuário não encontrado';
+        document.getElementById('bio').innerHTML = '';
+        document.getElementById('seguidores').innerHTML = '';
+        document.getElementById('foto').src = 'semfoto.png';
+        document.getElementById('foto').alt = 'Sem foto'; // Atribui um texto alternativo se a imagem não estiver disponível
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>Impressão de Informações do GitHub</h1>
+
+  <form>
+    <label for="numero">Digite um nome de usuário:</label>
+    <input type="text" id="numero" name="numero">
+
+    <button type="button" onclick="imprimirInformacoes()">Enviar</button>
+  </form>
+
+  <div id="resultado">
+    <h2 id="nome"></h2>
+    <p id="bio"></p>
+    <p id="seguidores"></p>
+    <img id="foto" src="semfoto.png" alt=""> <!-- Atribui o atributo alt vazio -->
+  </div>
+</body>
+</html>
