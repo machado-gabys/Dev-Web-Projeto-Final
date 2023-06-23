@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Busca de Informações de Filmes</title>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="index.js" type="module"></script>
+</head>
+<body>
+  <h1>Busca de Informações de Filmes</h1>
+
+  <form id="searchForm">
+    <label for="title">Digite o título do filme:</label>
+    <input type="text" id="title" name="title">
+
+    <button type="submit">Buscar</button>
+  </form>
+
+  <div id="result">
+    <h2 id="movieTitle"></h2>
+    <p id="movieYear"></p>
+    <p id="movieGenre"></p>
+    <p id="movieDirector"></p>
+    <p id="errorMessage"></p>
+  </div>
+
+  <script>
+    const searchForm = document.getElementById('searchForm');
+    const movieTitleElement = document.getElementById('movieTitle');
+    const movieYearElement = document.getElementById('movieYear');
+    const movieGenreElement = document.getElementById('movieGenre');
+    const movieDirectorElement = document.getElementById('movieDirector');
+    const errorMessageElement = document.getElementById('errorMessage');
+
+    searchForm.addEventListener('submit', async function(event) {
+      event.preventDefault(); // Impede o envio do formulário
+
+      const title = document.getElementById('title').value;
+
+      if (title) {
+        const movie = await getFilm(title);
+
+        if (movie) {
+          movieTitleElement.textContent = movie.Title;
+          movieYearElement.textContent = `Ano: ${movie.Year}`;
+          movieGenreElement.textContent = `Gênero: ${movie.Genre}`;
+          movieDirectorElement.textContent = `Diretor: ${movie.Director}`;
+          errorMessageElement.textContent = ''; // Limpa a mensagem de erro, se houver
+        } else {
+          movieTitleElement.textContent = '';
+          movieYearElement.textContent = '';
+          movieGenreElement.textContent = '';
+          movieDirectorElement.textContent = '';
+          errorMessageElement.textContent = 'Falha ao buscar as informações do filme.';
+        }
+      } else {
+        movieTitleElement.textContent = '';
+        movieYearElement.textContent = '';
+        movieGenreElement.textContent = '';
+        movieDirectorElement.textContent = '';
+        errorMessageElement.textContent = 'Por favor, digite o título do filme.';
+      }
+    });
+  </script>
+</body>
+</html>
